@@ -1,0 +1,25 @@
+{
+  "name": "js-log",
+  "version": "1.0.0",
+  "description": "Simple Javascript logging service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.jdb-labs.com/jdb/js-log.git"
+  },
+  "keywords": [
+    "log",
+    "logging"
+  ],
+  "author": "Jonathan Bernard",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
