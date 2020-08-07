@@ -1,5 +1,5 @@
 {
-  "name": "js-log",
+  "name": "@jdbernard/logging",
   "version": "1.0.0",
   "description": "Simple Javascript logging service.",
   "main": "src/index.ts",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.jdb-labs.com/jdb/js-log.git"
+    "url": "https://git.jdb-labs.com/jdb/js-logging.git"
   },
   "keywords": [
     "log",
