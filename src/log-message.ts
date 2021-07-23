@@ -9,9 +9,6 @@ export enum LogLevel {
   FATAL
 }
 
-const kv = 'WARN';
-const TEST = LogLevel[kv];
-
 export function parseLogLevel(str: string, defaultLevel = LogLevel.INFO): LogLevel {
   if (Object.prototype.hasOwnProperty.call(LogLevel, str)) {
     return LogLevel[<any>str] as unknown as LogLevel;
