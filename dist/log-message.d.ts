@@ -8,6 +8,7 @@ export declare enum LogLevel {
     ERROR = 6,
     FATAL = 7
 }
+export declare function parseLogLevel(str: string, defaultLevel?: LogLevel): LogLevel;
 export interface LogMessage {
     scope: string;
     level: LogLevel;
