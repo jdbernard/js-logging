@@ -1,5 +1,3 @@
-import Axios from 'axios';
-
 import { LogMessage, LogLevel } from './log-message';
 import LogAppender from './log-appender';
 
@@ -16,7 +14,6 @@ export class ApiLogAppender implements LogAppender {
   public maximumTimePassedInSec = 120;
   public threshold = LogLevel.ALL;
 
-  private http = Axios.create();
   private msgBuffer: ApiMessage[] = [];
   private lastSent = 0;
 
@@ -50,7 +47,10 @@ export class ApiLogAppender implements LogAppender {
 
   private doPost() {
     if (this.msgBuffer.length > 0 && this.authToken) {
-      this.http.post(this.apiEndpoint, this.msgBuffer, {
+      fetch(this.apiEndpoint, {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(this.msgBuffer),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.authToken}`
