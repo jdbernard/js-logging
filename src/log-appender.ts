@@ -1,5 +1,8 @@
 import { LogLevel, LogMessage } from './log-message';
-export default interface LogAppender {
+
+export interface LogAppender {
   threshold: LogLevel;
   appendMessage(message: LogMessage): void;
 }
+
+export default LogAppender;

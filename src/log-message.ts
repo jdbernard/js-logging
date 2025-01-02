@@ -1,3 +1,5 @@
+import { omit } from './util'
+
 export enum LogLevel {
   ALL = 0,
   TRACE,
@@ -6,12 +8,15 @@ export enum LogLevel {
   INFO,
   WARN,
   ERROR,
-  FATAL
+  FATAL,
 }
 
-export function parseLogLevel(str: string, defaultLevel = LogLevel.INFO): LogLevel {
-  if (Object.prototype.hasOwnProperty.call(LogLevel, str)) {
-    return LogLevel[<any>str] as unknown as LogLevel;
+export function parseLogLevel(
+  str: string,
+  defaultLevel = LogLevel.INFO,
+): LogLevel {
+  if (str in LogLevel) {
+    return LogLevel[str as keyof typeof LogLevel] as LogLevel;
   } else {
     return defaultLevel;
   }
@@ -20,10 +25,59 @@ export function parseLogLevel(str: string, defaultLevel = LogLevel.INFO): LogLev
 export interface LogMessage {
   scope: string;
   level: LogLevel;
-  message: string | object;
-  stacktrace: string;
+  message: string | Record<string, unknown>;
+  stacktrace?: string;
   error?: Error;
   timestamp: Date;
+}
+
+export type FlattenedLogMessage = Record<string, unknown>;
+
+/**
+ * Flatten a log message to a plain object. The *message* field can be either a
+ * string or an object. In the case of an object message, the LogMessage should
+ * be flattened before being emitted by an appender, promoting the object's
+ * fields to the top level of the message. Fields defined on the *LogMessage*
+ * interface are reserved and should not be used as keys in the message object
+ * (and will be ignored if they are).
+ *
+ * So, for example:
+ *
+ * ```typescript
+ * const logger = logService.getLogger('example');
+ * logger.info({ foo: 'bar', baz: 'qux', timestamp: 'today', level: LogLevel.WARN });
+ * ```
+ *
+ * Should result after flattening in a structured log message like:
+ * ```json
+ * {"scope":"example","level":4,"foo":"bar","baz":"qux","timestamp":"2020-01-01T00:00:00.000Z"}
+ * ```
+ */
+export function flattenMessage(msg: LogMessage): FlattenedLogMessage {
+  if (typeof msg.message === 'string') {
+    return { ...msg };
+  } else {
+    const { message, ...rest } = msg;
+    return {
+      ...omit(message, [
+        'scope',
+        'level',
+        'stacktrace',
+        'error',
+        'timestamp',
+      ]),
+      ...rest,
+    };
+  }
+}
+export type LogMessageFormatter = (msg: LogMessage) => string;
+
+export function structuredLogMessageFormatter(msg: LogMessage): string {
+  return JSON.stringify(flattenMessage(msg));
+}
+
+export function simpleTextLogMessageFormatter(msg: LogMessage): string {
+  return `[${msg.scope}] - ${msg.level}: ${msg.message}`;
 }
 
 export default LogMessage;

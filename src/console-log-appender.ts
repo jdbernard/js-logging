@@ -1,13 +1,21 @@
-/*tslint:disable:no-console*/
-import { LogMessage, LogLevel } from './log-message';
-import LogAppender from './log-appender';
+import {
+  LogLevel,
+  LogMessage,
+  LogMessageFormatter,
+  structuredLogMessageFormatter
+} from './log-message';
+import { LogAppender } from './log-appender';
 
 export class ConsoleLogAppender implements LogAppender {
   public threshold = LogLevel.ALL;
+  public formatter = structuredLogMessageFormatter;
 
-  constructor(threshold?: LogLevel) {
+  constructor(threshold?: LogLevel, formatter?: LogMessageFormatter) {
     if (threshold) {
       this.threshold = threshold;
+    }
+    if (formatter) {
+      this.formatter = formatter;
     }
   }
 
@@ -42,12 +50,12 @@ export class ConsoleLogAppender implements LogAppender {
         break;
     }
 
-    if (msg.error) {
-      logMethod(`[${msg.scope}]:`, msg.message, msg.error);
-    } else if (msg.stacktrace) {
-      logMethod(`[${msg.scope}]:`, msg.message, msg.stacktrace);
+    const strMsg = this.formatter(msg);
+
+    if (msg.error || msg.stacktrace) {
+      logMethod(strMsg, msg.error ?? msg.stacktrace);
     } else {
-      logMethod(`[${msg.scope}]:`, msg.message);
+      logMethod(strMsg);
     }
   }
 }

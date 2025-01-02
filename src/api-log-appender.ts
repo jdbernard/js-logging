@@ -1,20 +1,13 @@
-import { LogMessage, LogLevel } from './log-message';
-import LogAppender from './log-appender';
+import { LogMessage, LogLevel, flattenMessage, FlattenedLogMessage } from './log-message';
+import { LogAppender } from './log-appender';
 
-interface ApiMessage {
-  level: string;
-  message: string;
-  scope: string;
-  stacktrace: string;
-  timestamp: string;
-}
 export class ApiLogAppender implements LogAppender {
   public batchSize = 10;
   public minimumTimePassedInSec = 60;
   public maximumTimePassedInSec = 120;
   public threshold = LogLevel.ALL;
 
-  private msgBuffer: ApiMessage[] = [];
+  private msgBuffer: FlattenedLogMessage[] = [];
   private lastSent = 0;
 
   constructor(
@@ -33,16 +26,7 @@ export class ApiLogAppender implements LogAppender {
       return;
     }
 
-    this.msgBuffer.push({
-      level: LogLevel[msg.level],
-      message:
-        typeof msg.message === 'string'
-          ? msg.message
-          : JSON.stringify(msg.message),
-      scope: msg.scope,
-      stacktrace: msg.stacktrace,
-      timestamp: msg.timestamp.toISOString()
-    });
+    this.msgBuffer.push(flattenMessage(msg));
   }
 
   private doPost() {
