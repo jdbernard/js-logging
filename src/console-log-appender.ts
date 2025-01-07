@@ -1,14 +1,14 @@
 import {
+  flattenMessage,
   LogLevel,
   LogMessage,
   LogMessageFormatter,
-  structuredLogMessageFormatter
 } from './log-message';
 import { LogAppender } from './log-appender';
 
 export class ConsoleLogAppender implements LogAppender {
   public threshold = LogLevel.ALL;
-  public formatter = structuredLogMessageFormatter;
+  public formatter: LogMessageFormatter = flattenMessage
 
   constructor(threshold?: LogLevel, formatter?: LogMessageFormatter) {
     if (threshold) {

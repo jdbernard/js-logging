@@ -50,12 +50,12 @@ export type FlattenedLogMessage = Record<string, unknown>;
  *
  * Should result after flattening in a structured log message like:
  * ```json
- * {"scope":"example","level":4,"foo":"bar","baz":"qux","timestamp":"2020-01-01T00:00:00.000Z"}
+ * {"scope":"example","level":"INFO","foo":"bar","baz":"qux","timestamp":"2020-01-01T00:00:00.000Z"}
  * ```
  */
 export function flattenMessage(msg: LogMessage): FlattenedLogMessage {
   if (typeof msg.message === 'string') {
-    return { ...msg };
+    return { ...msg, level: LogLevel[msg.level] };
   } else {
     const { message, ...rest } = msg;
     return {
@@ -67,10 +67,11 @@ export function flattenMessage(msg: LogMessage): FlattenedLogMessage {
         'timestamp',
       ]),
       ...rest,
+      level: LogLevel[msg.level],
     };
   }
 }
-export type LogMessageFormatter = (msg: LogMessage) => string;
+export type LogMessageFormatter = (msg: LogMessage) => string | FlattenedLogMessage;
 
 export function structuredLogMessageFormatter(msg: LogMessage): string {
   return JSON.stringify(flattenMessage(msg));
