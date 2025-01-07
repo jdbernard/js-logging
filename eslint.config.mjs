@@ -25,6 +25,14 @@ const customTypescriptConfig = {
   rules: {
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single', { avoidEscape: true }],
+    semi: ['error', 'never'],
+    '@typescript-eslint/no-unused-vars': ['error', {
+      'args': 'all',
+      'argsIgnorePattern': '^_',
+      'caughtErrorsIgnorePattern': '^_',
+      'destructuredArrayIgnorePattern': '^_',
+      'varsIgnorePattern': '^_',
+    }],
   },
 }
 
@@ -51,4 +59,10 @@ export default [
   eslintJs.configs.recommended,
   ...recommendedTypeScriptConfigs,
   customTypescriptConfig,
+  {
+    rules: {
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'never'],
+    },
+  },
 ]
