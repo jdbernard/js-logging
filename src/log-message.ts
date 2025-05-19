@@ -1,4 +1,4 @@
-import { omit } from './util'
+import { omit } from "./util";
 
 export enum LogLevel {
   ALL = 0,
@@ -25,7 +25,7 @@ export function parseLogLevel(
 export interface LogMessage {
   scope: string;
   level: LogLevel;
-  message: string | Record<string, unknown>;
+  msg: string | Record<string, unknown>;
   stacktrace?: string;
   error?: Error;
   timestamp: Date;
@@ -53,32 +53,34 @@ export type FlattenedLogMessage = Record<string, unknown>;
  * {"scope":"example","level":"INFO","foo":"bar","baz":"qux","timestamp":"2020-01-01T00:00:00.000Z"}
  * ```
  */
-export function flattenMessage(msg: LogMessage): FlattenedLogMessage {
-  if (typeof msg.message === 'string') {
-    return { ...msg, level: LogLevel[msg.level] };
+export function flattenMessage(logMsg: LogMessage): FlattenedLogMessage {
+  if (typeof logMsg.msg === "string") {
+    return { ...logMsg, level: LogLevel[logMsg.level] };
   } else {
-    const { message, ...rest } = msg;
+    const { msg, ...rest } = logMsg;
     return {
-      ...omit(message, [
-        'scope',
-        'level',
-        'stacktrace',
-        'error',
-        'timestamp',
+      ...omit(msg, [
+        "scope",
+        "level",
+        "stacktrace",
+        "error",
+        "timestamp",
       ]),
       ...rest,
-      level: LogLevel[msg.level],
+      level: LogLevel[logMsg.level],
     };
   }
 }
-export type LogMessageFormatter = (msg: LogMessage) => string | FlattenedLogMessage;
+export type LogMessageFormatter = (
+  msg: LogMessage,
+) => string | FlattenedLogMessage;
 
 export function structuredLogMessageFormatter(msg: LogMessage): string {
   return JSON.stringify(flattenMessage(msg));
 }
 
 export function simpleTextLogMessageFormatter(msg: LogMessage): string {
-  return `[${msg.scope}] - ${msg.level}: ${msg.message}`;
+  return `[${msg.scope}] - ${msg.level}: ${msg.msg}`;
 }
 
 export default LogMessage;

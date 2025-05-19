@@ -55,7 +55,7 @@ export class Logger {
 
   public doLog(
     level: LogLevel,
-    message: Error | MessageType,
+    msg: Error | MessageType,
     stacktrace?: string,
   ): void {
     if (level < this.getEffectiveThreshold()) {
@@ -65,57 +65,57 @@ export class Logger {
     const logMsg: LogMessage = {
       scope: this.name,
       level,
-      message: '',
+      msg: '',
       stacktrace: '',
       timestamp: new Date(),
     };
 
-    if (message === undefined || message === null) {
-      logMsg.message = message;
+    if (msg === undefined || msg === null) {
+      logMsg.msg = msg;
       logMsg.stacktrace = stacktrace ?? '';
-    } else if (message instanceof Error) {
-      const error = message as Error;
+    } else if (msg instanceof Error) {
+      const error = msg as Error;
       logMsg.error = error;
-      logMsg.message = `${error.name}: ${error.message}`;
+      logMsg.msg = `${error.name}: ${error.message}`;
       logMsg.stacktrace = stacktrace ?? error.stack ?? '';
-    } else if (isDeferredMsg(message)) {
-      logMsg.message = message();
+    } else if (isDeferredMsg(msg)) {
+      logMsg.msg = msg();
       logMsg.stacktrace = stacktrace == null ? '' : stacktrace;
     } else {
       // string | object
-      logMsg.message = message;
+      logMsg.msg = msg;
       logMsg.stacktrace = stacktrace == null ? '' : stacktrace;
     }
 
     this.sendToAppenders(logMsg);
   }
 
-  public trace(message: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.TRACE, message, stacktrace);
+  public trace(msg: Error | MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.TRACE, msg, stacktrace);
   }
 
-  public debug(message: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.DEBUG, message, stacktrace);
+  public debug(msg: Error | MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.DEBUG, msg, stacktrace);
   }
 
-  public log(message: MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.LOG, message, stacktrace);
+  public log(msg: MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.LOG, msg, stacktrace);
   }
 
-  public info(message: MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.INFO, message, stacktrace);
+  public info(msg: MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.INFO, msg, stacktrace);
   }
 
-  public warn(message: MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.WARN, message, stacktrace);
+  public warn(msg: MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.WARN, msg, stacktrace);
   }
 
-  public error(message: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.ERROR, message, stacktrace);
+  public error(msg: Error | MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.ERROR, msg, stacktrace);
   }
 
-  public fatal(message: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.FATAL, message, stacktrace);
+  public fatal(msg: Error | MessageType, stacktrace?: string): void {
+    this.doLog(LogLevel.FATAL, msg, stacktrace);
   }
 
   protected sendToAppenders(logMsg: LogMessage) {
