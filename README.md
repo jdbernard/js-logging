@@ -54,7 +54,7 @@ written to the appender. This requires the assumption of all logs being written
 to a text-based destination, which is not always the case for us.
 
 In this library, all logs are internally stored as structured data, defined by
-the *LogMessage* interface. Notably, the *message* field can be either a string
+the *LogMessage* interface. Notably, the *msg* field can be either a string
 or an object, allowing for the addition of arbitrary fields to be added to the
 log event.
 
@@ -65,9 +65,9 @@ messages written to the console. the *ApiAppender* would be an example of an
 appender for which layout would be irrelevant.
 
 Finally, notice that all of the appenders provided by this library
-automatically persist log messages as structured data, flattening the `message`
+automatically persist log messages as structured data, flattening the `msg`
 field if it is an object. *ConsoleAppender* will write the log message as a
-JSON object, promoting fields in the `message` object to top-level fields in
+JSON object, promoting fields in the `msg` object to top-level fields in
 the output. For example:
 
 ```typescript
@@ -87,24 +87,24 @@ someBusinessLogic();
 results in the following two events logged as output to the console:
 
 ```json
-{"timestamp":"2021-09-01T00:00:00.000Z","level":"INFO","scope":"example","message":"Starting application"}
+{"timestamp":"2021-09-01T00:00:00.000Z","level":"INFO","scope":"example","msg":"Starting application"}
 {"timestamp":"2021-09-01T00:00:00.000Z","level":"DEBUG","scope":"example","msg":"Doing some business logic","method":"someBusinessLogic","foo":"bar"}
 ```
 
 Note that the field name in the structured data for string messages is
-"message". In the case of an object message, the fields are used as provided.
+"msg". In the case of an object message, the fields are used as provided.
 Fields defined on the *LogMessage* interface are reserved and should not be
-used as keys in the message object (and will be ignored if they are). So, for
+used as keys in the msg object (and will be ignored if they are). So, for
 example:
 
 ```typescript
-logger.debug({ level: 'WARN', message: 'Example of ignored fields', timestamp: 'today' });
+logger.debug({ level: 'WARN', msg: 'Example of ignored fields', timestamp: 'today' });
 
 results in the following event logged as output to the console (note the
 ignored `level` and `timestamp` fields from the object):
 
 ```json
-{"timestamp":"2021-09-01T00:00:00.000Z","level":"DEBUG","scope":"example","message":"Example of ignored fields"}
+{"timestamp":"2021-09-01T00:00:00.000Z","level":"DEBUG","scope":"example","msg":"Example of ignored fields"}
 ```
 
 This flattening behavior is implemented in the `flattenMessage` function
