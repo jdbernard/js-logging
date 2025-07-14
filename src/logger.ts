@@ -67,17 +67,17 @@ export class Logger {
       level,
       msg: '',
       stacktrace: '',
-      timestamp: new Date(),
+      ts: new Date(),
     };
 
     if (msg === undefined || msg === null) {
       logMsg.msg = msg;
       logMsg.stacktrace = stacktrace ?? '';
     } else if (msg instanceof Error) {
-      const error = msg as Error;
-      logMsg.error = error;
-      logMsg.msg = `${error.name}: ${error.message}`;
-      logMsg.stacktrace = stacktrace ?? error.stack ?? '';
+      const err = msg as Error;
+      logMsg.err = err;
+      logMsg.msg = `${err.name}: ${err.message}`;
+      logMsg.stacktrace = stacktrace ?? err.stack ?? '';
     } else if (isDeferredMsg(msg)) {
       logMsg.msg = msg();
       logMsg.stacktrace = stacktrace == null ? '' : stacktrace;

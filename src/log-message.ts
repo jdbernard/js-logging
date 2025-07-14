@@ -27,8 +27,8 @@ export interface LogMessage {
   level: LogLevel;
   msg: string | Record<string, unknown>;
   stacktrace?: string;
-  error?: Error;
-  timestamp: Date;
+  err?: Error;
+  ts: Date;
 }
 
 export type FlattenedLogMessage = Record<string, unknown>;
@@ -45,12 +45,12 @@ export type FlattenedLogMessage = Record<string, unknown>;
  *
  * ```typescript
  * const logger = logService.getLogger('example');
- * logger.info({ foo: 'bar', baz: 'qux', timestamp: 'today', level: LogLevel.WARN });
+ * logger.info({ foo: 'bar', baz: 'qux', ts: 'today', level: LogLevel.WARN });
  * ```
  *
  * Should result after flattening in a structured log message like:
  * ```json
- * {"scope":"example","level":"INFO","foo":"bar","baz":"qux","timestamp":"2020-01-01T00:00:00.000Z"}
+ * {"scope":"example","level":"INFO","foo":"bar","baz":"qux","ts":"2020-01-01T00:00:00.000Z"}
  * ```
  */
 export function flattenMessage(logMsg: LogMessage): FlattenedLogMessage {
@@ -63,8 +63,8 @@ export function flattenMessage(logMsg: LogMessage): FlattenedLogMessage {
         "scope",
         "level",
         "stacktrace",
-        "error",
-        "timestamp",
+        "err",
+        "ts",
       ]),
       ...rest,
       level: LogLevel[logMsg.level],

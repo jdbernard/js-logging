@@ -60,19 +60,19 @@ export class ConsoleLogAppender implements LogAppender {
     const fmtMsg = this.formatter(msg);
 
     if (typeof fmtMsg === "string") {
-      if (msg.error || msg.stacktrace) {
-        logMethod(fmtMsg, msg.error ?? msg.stacktrace);
+      if (msg.err || msg.stacktrace) {
+        logMethod(fmtMsg, msg.err ?? msg.stacktrace);
       } else {
         logMethod(fmtMsg);
       }
     } else {
-      const { message, _error, _stacktrace, ...rest } = fmtMsg;
+      const { message, _err, _stacktrace, ...rest } = fmtMsg;
       const summary = `${LogLevel[msg.level]} -- ${msg.scope}: ${
         message ?? fmtMsg.method
       }\n`;
 
-      if (msg.error || msg.stacktrace) {
-        logMethod(summary, msg.error ?? msg.stacktrace, rest);
+      if (msg.err || msg.stacktrace) {
+        logMethod(summary, msg.err ?? msg.stacktrace, rest);
       } else {
         logMethod(summary, rest);
       }
