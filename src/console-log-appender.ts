@@ -39,6 +39,8 @@ export class ConsoleLogAppender implements LogAppender {
     switch (msg.level) {
       case LogLevel.ALL:
       case LogLevel.TRACE:
+        logMethod = console.trace;
+        break;
       case LogLevel.LOG:
         logMethod = console.log;
         break;
@@ -53,7 +55,7 @@ export class ConsoleLogAppender implements LogAppender {
         break;
       case LogLevel.ERROR:
       case LogLevel.FATAL:
-        logMethod = console.trace;
+        logMethod = console.error;
         break;
     }
 
