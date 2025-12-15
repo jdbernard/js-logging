@@ -34,12 +34,15 @@ export interface LogMessage {
 export type FlattenedLogMessage = Record<string, unknown>;
 
 /**
- * Flatten a log message to a plain object. The *message* field can be either a
- * string or an object. In the case of an object message, the LogMessage should
- * be flattened before being emitted by an appender, promoting the object's
- * fields to the top level of the message. Fields defined on the *LogMessage*
- * interface are reserved and should not be used as keys in the message object
- * (and will be ignored if they are).
+ * Flatten a log message to a plain object in preparation for emission to an
+ * appender.
+ *
+ * In general, the *message* field can be either a string or an object. In the
+ * case of an object message, the LogMessage should be flattened before being
+ * emitted by an appender, promoting the object's fields to the top level of
+ * the message. Fields defined on the *LogMessage* interface are reserved and
+ * should not be used as keys in the message object (and will be ignored if
+ * they are).
  *
  * So, for example:
  *
@@ -48,7 +51,7 @@ export type FlattenedLogMessage = Record<string, unknown>;
  * logger.info({ foo: 'bar', baz: 'qux', ts: 'today', level: LogLevel.WARN });
  * ```
  *
- * Should result after flattening in a structured log message like:
+ * Will result in a structured log message after flattening like:
  * ```json
  * {"scope":"example","level":"INFO","foo":"bar","baz":"qux","ts":"2020-01-01T00:00:00.000Z"}
  * ```
