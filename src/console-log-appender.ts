@@ -68,9 +68,9 @@ export class ConsoleLogAppender implements LogAppender {
         logMethod(fmtMsg);
       }
     } else {
-      const { message, _err, _stacktrace, ...rest } = fmtMsg;
+      const { msg, _err, _stacktrace, ...rest } = fmtMsg;
       const summary = `${LogLevel[msg.level]} -- ${msg.scope}: ${
-        message ?? fmtMsg.method
+        msg ?? fmtMsg.method
       }\n`;
 
       if (msg.err || msg.stacktrace) {
