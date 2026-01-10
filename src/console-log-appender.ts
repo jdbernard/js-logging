@@ -39,9 +39,11 @@ export class ConsoleLogAppender implements LogAppender {
     switch (msg.level) {
       case LogLevel.ALL:
       case LogLevel.TRACE:
-        logMethod = console.trace
-        break
       case LogLevel.LOG:
+        // console.trace generates and prints a stack trace attached to the
+        // logged message. This is not really what we want for TRACE level
+        // messages as it just makes things more verbose needlessly, so these
+        // all log to console.log
         logMethod = console.log
         break
       case LogLevel.DEBUG:
