@@ -1,4 +1,4 @@
-import { omit } from "./util";
+import { omit } from './util'
 
 export enum LogLevel {
   ALL = 0,
@@ -16,9 +16,9 @@ export function parseLogLevel(
   defaultLevel = LogLevel.INFO,
 ): LogLevel {
   if (str in LogLevel) {
-    return LogLevel[str as keyof typeof LogLevel] as LogLevel;
+    return LogLevel[str as keyof typeof LogLevel] as LogLevel
   } else {
-    return defaultLevel;
+    return defaultLevel
   }
 }
 
@@ -57,21 +57,21 @@ export type FlattenedLogMessage = Record<string, unknown>;
  * ```
  */
 export function flattenMessage(logMsg: LogMessage): FlattenedLogMessage {
-  if (typeof logMsg.msg === "string") {
-    return { ...logMsg, level: LogLevel[logMsg.level] };
+  if (typeof logMsg.msg === 'string') {
+    return { ...logMsg, level: LogLevel[logMsg.level] }
   } else {
-    const { msg, ...rest } = logMsg;
+    const { msg, ...rest } = logMsg
     return {
       ...omit(msg, [
-        "scope",
-        "level",
-        "stacktrace",
-        "err",
-        "ts",
+        'scope',
+        'level',
+        'stacktrace',
+        'err',
+        'ts',
       ]),
       ...rest,
       level: LogLevel[logMsg.level],
-    };
+    }
   }
 }
 export type LogMessageFormatter = (
@@ -79,11 +79,11 @@ export type LogMessageFormatter = (
 ) => string | FlattenedLogMessage;
 
 export function structuredLogMessageFormatter(msg: LogMessage): string {
-  return JSON.stringify(flattenMessage(msg));
+  return JSON.stringify(flattenMessage(msg))
 }
 
 export function simpleTextLogMessageFormatter(msg: LogMessage): string {
-  return `[${msg.scope}] - ${msg.level}: ${msg.msg}`;
+  return `[${msg.scope}] - ${msg.level}: ${msg.msg}`
 }
 
-export default LogMessage;
+export default LogMessage

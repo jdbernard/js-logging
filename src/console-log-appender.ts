@@ -3,8 +3,8 @@ import {
   LogLevel,
   LogMessage,
   LogMessageFormatter,
-} from "./log-message";
-import { LogAppender } from "./log-appender";
+} from './log-message'
+import { LogAppender } from './log-appender'
 
 /**
  * A log appender that writes log messages to the console. The behavior of the
@@ -18,68 +18,68 @@ import { LogAppender } from "./log-appender";
  * data for inspection in the browser's developer tools.
  */
 export class ConsoleLogAppender implements LogAppender {
-  public threshold = LogLevel.ALL;
-  public formatter: LogMessageFormatter = flattenMessage;
+  public threshold = LogLevel.ALL
+  public formatter: LogMessageFormatter = flattenMessage
 
   constructor(threshold?: LogLevel, formatter?: LogMessageFormatter) {
     if (threshold) {
-      this.threshold = threshold;
+      this.threshold = threshold
     }
     if (formatter) {
-      this.formatter = formatter;
+      this.formatter = formatter
     }
   }
 
   public appendMessage(msg: LogMessage): void {
     if (this.threshold && msg.level < this.threshold) {
-      return;
+      return
     }
 
-    let logMethod = console.log;
+    let logMethod = console.log
     switch (msg.level) {
       case LogLevel.ALL:
       case LogLevel.TRACE:
-        logMethod = console.trace;
-        break;
+        logMethod = console.trace
+        break
       case LogLevel.LOG:
-        logMethod = console.log;
-        break;
+        logMethod = console.log
+        break
       case LogLevel.DEBUG:
-        logMethod = console.debug;
-        break;
+        logMethod = console.debug
+        break
       case LogLevel.INFO:
-        logMethod = console.info;
-        break;
+        logMethod = console.info
+        break
       case LogLevel.WARN:
-        logMethod = console.warn;
-        break;
+        logMethod = console.warn
+        break
       case LogLevel.ERROR:
       case LogLevel.FATAL:
-        logMethod = console.error;
-        break;
+        logMethod = console.error
+        break
     }
 
-    const fmtMsg = this.formatter(msg);
+    const fmtMsg = this.formatter(msg)
 
-    if (typeof fmtMsg === "string") {
+    if (typeof fmtMsg === 'string') {
       if (msg.err || msg.stacktrace) {
-        logMethod(fmtMsg, msg.err ?? msg.stacktrace);
+        logMethod(fmtMsg, msg.err ?? msg.stacktrace)
       } else {
-        logMethod(fmtMsg);
+        logMethod(fmtMsg)
       }
     } else {
-      const { msg: innerMsg, _err, _stacktrace, ...rest } = fmtMsg;
+      const { msg: innerMsg, _err, _stacktrace, ...rest } = fmtMsg
       const summary = `${LogLevel[msg.level]} -- ${msg.scope}: ${
         innerMsg ?? fmtMsg.method
-      }\n`;
+      }\n`
 
       if (msg.err || msg.stacktrace) {
-        logMethod(summary, msg.err ?? msg.stacktrace, rest);
+        logMethod(summary, msg.err ?? msg.stacktrace, rest)
       } else {
-        logMethod(summary, rest);
+        logMethod(summary, rest)
       }
     }
   }
 }
 
-export default ConsoleLogAppender;
+export default ConsoleLogAppender

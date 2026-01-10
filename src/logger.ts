@@ -1,11 +1,11 @@
-import { LogLevel, LogMessage } from './log-message';
-import { LogAppender } from './log-appender';
+import { LogLevel, LogMessage } from './log-message'
+import { LogAppender } from './log-appender'
 
 export type DeferredMsg = () => string | Record<string, unknown>;
 export type MessageType = string | DeferredMsg | Record<string, unknown>;
 
 export function isDeferredMsg(msg: MessageType): msg is DeferredMsg {
-  return typeof msg === 'function';
+  return typeof msg === 'function'
 }
 
 /**
@@ -41,7 +41,7 @@ export function isDeferredMsg(msg: MessageType): msg is DeferredMsg {
  * For more details, see *LogService#getLogger*.
  */
 export class Logger {
-  public appenders: LogAppender[] = [];
+  public appenders: LogAppender[] = []
 
   public constructor(
     public readonly name: string,
@@ -50,7 +50,7 @@ export class Logger {
   ) {}
 
   public createChildLogger(name: string, threshold?: LogLevel): Logger {
-    return new Logger(name, this, threshold);
+    return new Logger(name, this, threshold)
   }
 
   public doLog(
@@ -59,7 +59,7 @@ export class Logger {
     stacktrace?: string,
   ): void {
     if (level < this.getEffectiveThreshold()) {
-      return;
+      return
     }
 
     const logMsg: LogMessage = {
@@ -68,77 +68,77 @@ export class Logger {
       msg: '',
       stacktrace: '',
       ts: new Date(),
-    };
-
-    if (msg === undefined || msg === null) {
-      logMsg.msg = msg;
-      logMsg.stacktrace = stacktrace ?? '';
-    } else if (msg instanceof Error) {
-      const err = msg as Error;
-      logMsg.err = err;
-      logMsg.msg = `${err.name}: ${err.message}`;
-      logMsg.stacktrace = stacktrace ?? err.stack ?? '';
-    } else if (isDeferredMsg(msg)) {
-      logMsg.msg = msg();
-      logMsg.stacktrace = stacktrace == null ? '' : stacktrace;
-    } else {
-      // string | object
-      logMsg.msg = msg;
-      logMsg.stacktrace = stacktrace == null ? '' : stacktrace;
     }
 
-    this.sendToAppenders(logMsg);
+    if (msg === undefined || msg === null) {
+      logMsg.msg = msg
+      logMsg.stacktrace = stacktrace ?? ''
+    } else if (msg instanceof Error) {
+      const err = msg as Error
+      logMsg.err = err
+      logMsg.msg = `${err.name}: ${err.message}`
+      logMsg.stacktrace = stacktrace ?? err.stack ?? ''
+    } else if (isDeferredMsg(msg)) {
+      logMsg.msg = msg()
+      logMsg.stacktrace = stacktrace == null ? '' : stacktrace
+    } else {
+      // string | object
+      logMsg.msg = msg
+      logMsg.stacktrace = stacktrace == null ? '' : stacktrace
+    }
+
+    this.sendToAppenders(logMsg)
   }
 
   public trace(msg: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.TRACE, msg, stacktrace);
+    this.doLog(LogLevel.TRACE, msg, stacktrace)
   }
 
   public debug(msg: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.DEBUG, msg, stacktrace);
+    this.doLog(LogLevel.DEBUG, msg, stacktrace)
   }
 
   public log(msg: MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.LOG, msg, stacktrace);
+    this.doLog(LogLevel.LOG, msg, stacktrace)
   }
 
   public info(msg: MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.INFO, msg, stacktrace);
+    this.doLog(LogLevel.INFO, msg, stacktrace)
   }
 
   public warn(msg: MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.WARN, msg, stacktrace);
+    this.doLog(LogLevel.WARN, msg, stacktrace)
   }
 
   public error(msg: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.ERROR, msg, stacktrace);
+    this.doLog(LogLevel.ERROR, msg, stacktrace)
   }
 
   public fatal(msg: Error | MessageType, stacktrace?: string): void {
-    this.doLog(LogLevel.FATAL, msg, stacktrace);
+    this.doLog(LogLevel.FATAL, msg, stacktrace)
   }
 
   protected sendToAppenders(logMsg: LogMessage) {
     this.appenders.forEach((app) => {
-      app.appendMessage(logMsg);
-    });
+      app.appendMessage(logMsg)
+    })
 
     if (this.parentLogger) {
-      this.parentLogger.sendToAppenders(logMsg);
+      this.parentLogger.sendToAppenders(logMsg)
     }
   }
 
   protected getEffectiveThreshold(): LogLevel {
     if (this.threshold) {
-      return this.threshold;
+      return this.threshold
     }
     if (this.parentLogger) {
-      return this.parentLogger.getEffectiveThreshold();
+      return this.parentLogger.getEffectiveThreshold()
     }
 
     // should never happen (root logger should always have a threshold
-    return LogLevel.ALL;
+    return LogLevel.ALL
   }
 }
 
-export default Logger;
+export default Logger

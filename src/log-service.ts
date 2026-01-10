@@ -1,7 +1,7 @@
-import { LogLevel } from './log-message';
-import { Logger } from './logger';
+import { LogLevel } from './log-message'
+import { Logger } from './logger'
 
-const ROOT_LOGGER_NAME = 'ROOT';
+const ROOT_LOGGER_NAME = 'ROOT'
 
 /**
  * Service for managing loggers. A LogService instance defines
@@ -10,19 +10,19 @@ const ROOT_LOGGER_NAME = 'ROOT';
  * module.
  */
 export class LogService {
-  private loggers: Record<string, Logger>;
+  private loggers: Record<string, Logger>
 
   public get ROOT_LOGGER() {
-    return this.loggers[ROOT_LOGGER_NAME];
+    return this.loggers[ROOT_LOGGER_NAME]
   }
 
   public constructor() {
-    this.loggers = {};
+    this.loggers = {}
     this.loggers[ROOT_LOGGER_NAME] = new Logger(
       ROOT_LOGGER_NAME,
       undefined,
       LogLevel.ALL,
-    );
+    )
   }
 
   /**
@@ -55,28 +55,28 @@ export class LogService {
    */
   public getLogger(name: string, threshold?: LogLevel): Logger {
     if (this.loggers[name]) {
-      return this.loggers[name];
+      return this.loggers[name]
     }
 
-    let parentLogger: Logger;
+    let parentLogger: Logger
 
     const parentLoggerName = Object.keys(this.loggers)
       .filter((n: string) => name.startsWith(n))
       .reduce(
         (acc: string, cur: string) => (acc.length > cur.length ? acc : cur),
         '',
-      );
+      )
 
     if (parentLoggerName) {
-      parentLogger = this.loggers[parentLoggerName];
+      parentLogger = this.loggers[parentLoggerName]
     } else {
-      parentLogger = this.ROOT_LOGGER;
+      parentLogger = this.ROOT_LOGGER
     }
 
-    this.loggers[name] = parentLogger.createChildLogger(name, threshold);
-    return this.loggers[name];
+    this.loggers[name] = parentLogger.createChildLogger(name, threshold)
+    return this.loggers[name]
   }
 }
 
-export const logService = new LogService();
-export default logService;
+export const logService = new LogService()
+export default logService
