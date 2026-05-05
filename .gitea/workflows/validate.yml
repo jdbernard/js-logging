@@ -8,15 +8,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: bun
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Bun
-        run: curl -fsSL https://bun.sh/install | bash
-      - name: Add Bun to PATH
-        run: echo "$HOME/.bun/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: bun install
