@@ -5,7 +5,7 @@ export class ApiLogAppender implements LogAppender {
   public batchSize = 10
   public minimumTimePassedInSec = 60
   public maximumTimePassedInSec = 120
-  public threshold = LogLevel.ALL
+  public threshold: LogLevel
 
   private msgBuffer: FlattenedLogMessage[] = []
   private lastSent = 0
@@ -16,9 +16,7 @@ export class ApiLogAppender implements LogAppender {
     threshold?: LogLevel
   ) {
     setTimeout(this.checkPost, 1000)
-    if (threshold) {
-      this.threshold = threshold
-    }
+    this.threshold = threshold ?? LogLevel.ALL
   }
 
   public appendMessage(msg: LogMessage): void {

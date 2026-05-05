@@ -1,23 +1,18 @@
-import type {
-  LogLevel,
-  LogMessage
-} from './log-message'
+import type { LogAppender } from './log-appender'
+import { LogLevel, type LogMessage } from './log-message'
 
 export class BufferLogAppender implements LogAppender {
-  public threshold = LogLevel.ALL
+  public threshold: LogLevel
   public buffer: LogMessage[]
 
-  constructor(buffer: LogMessage[], threshold?: LogLevel) {
-    this.buffer = buffer
-
-    if (threshold) {
-      this.threshold = threshold
-    }
+  constructor(buffer?: LogMessage[], threshold?: LogLevel) {
+    this.buffer = buffer ?? []
+    this.threshold = threshold ?? LogLevel.ALL
   }
 
   public appendMessage(msg: LogMessage): void {
     if (this.threshold && msg.level < this.threshold) return
-    else buffer.push(msg)
+    else this.buffer.push(msg)
   }
 
   public clearBuffer(): void {

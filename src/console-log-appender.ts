@@ -18,16 +18,12 @@ import { LogAppender } from './log-appender'
  * data for inspection in the browser's developer tools.
  */
 export class ConsoleLogAppender implements LogAppender {
-  public threshold = LogLevel.ALL
-  public formatter: LogMessageFormatter = flattenMessage
+  public threshold: LogLevel
+  public formatter: LogMessageFormatter
 
   constructor(threshold?: LogLevel, formatter?: LogMessageFormatter) {
-    if (threshold) {
-      this.threshold = threshold
-    }
-    if (formatter) {
-      this.formatter = formatter
-    }
+    this.threshold = threshold ?? LogLevel.ALL
+    this.formatter = formatter ?? flattenMessage
   }
 
   public appendMessage(msg: LogMessage): void {
