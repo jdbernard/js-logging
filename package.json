@@ -10,7 +10,8 @@
   "scripts": {
     "build": "bunx tsc",
     "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
   },
   "repository": {
     "type": "git",
