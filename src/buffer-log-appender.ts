@@ -4,6 +4,7 @@ import { LogLevel, type LogMessage } from './log-message'
 export class BufferLogAppender implements LogAppender {
   public threshold: LogLevel
   public buffer: LogMessage[]
+  public bufferMax?: number
 
   constructor(buffer?: LogMessage[], threshold?: LogLevel) {
     this.buffer = buffer ?? []
@@ -12,7 +13,15 @@ export class BufferLogAppender implements LogAppender {
 
   public appendMessage(msg: LogMessage): void {
     if (this.threshold && msg.level < this.threshold) return
-    else this.buffer.push(msg)
+
+    this.buffer.push(msg)
+
+    if (this.bufferMax !== undefined) {
+      const max = Math.max(0, this.bufferMax)
+      while (this.buffer.length > max) {
+        this.buffer.shift()
+      }
+    }
   }
 
   public clearBuffer(): void {

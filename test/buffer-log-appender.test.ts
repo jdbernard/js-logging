@@ -39,6 +39,36 @@ describe("BufferLogAppender", () => {
     expect(appender.buffer[1].msg).toBe("second");
   });
 
+  test("defaults to an unbounded buffer", () => {
+    const appender = new BufferLogAppender();
+
+    appender.appendMessage(makeMsg({ msg: "first" }));
+    appender.appendMessage(makeMsg({ msg: "second" }));
+    appender.appendMessage(makeMsg({ msg: "third" }));
+
+    expect(appender.buffer.length).toBe(3);
+    expect(appender.buffer.map((message) => message.msg)).toEqual([
+      "first",
+      "second",
+      "third",
+    ]);
+  });
+
+  test("trims oldest messages when bufferMax is exceeded", () => {
+    const appender = new BufferLogAppender();
+    appender.bufferMax = 2;
+
+    appender.appendMessage(makeMsg({ msg: "first" }));
+    appender.appendMessage(makeMsg({ msg: "second" }));
+    appender.appendMessage(makeMsg({ msg: "third" }));
+
+    expect(appender.buffer.length).toBe(2);
+    expect(appender.buffer.map((message) => message.msg)).toEqual([
+      "second",
+      "third",
+    ]);
+  });
+
   test("respects threshold", () => {
     const appender = new BufferLogAppender(undefined, LogLevel.WARN);
 
