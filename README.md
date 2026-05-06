@@ -161,6 +161,60 @@ would allow us to log all events from both the API and HTTP client loggers to
 the API log collector, but ignore the rest of the application regardless of the
 logging level.
 
+## Development
+
+Set up the project locally:
+
+```bash
+bun install
+```
+
+Build the TypeScript sources:
+
+```bash
+bunx tsc
+```
+
+Run the test suite:
+
+```bash
+bun test
+```
+
+Run tests with coverage:
+
+```bash
+bun test --coverage
+```
+
+Before opening a pull request, make sure the project builds and all tests pass:
+
+```bash
+bunx tsc && bun test
+```
+
+## CI
+
+The repository uses Gitea Actions for continuous integration. The `Validate` workflow runs on every push and pull request to `main` and performs the following steps:
+
+1. Checks out the repository.
+2. Installs dependencies with `bun install`.
+3. Runs the test suite with `bun test`.
+
+## Release / Maintenance
+
+Releases are created from the `main` branch. The high-level maintainer workflow is:
+
+1. Update `version` in `package.json` following semantic versioning.
+2. Ensure the build succeeds and all tests pass locally (`bunx tsc && bun test`).
+3. Commit the version bump.
+4. Create an annotated Git tag in the `x.y.z` format (for example, `2.4.1`).
+5. Push the commit and the tag to the remote repository.
+6. Verify that CI passes on the tag.
+7. Publish the package to npm (e.g. `npm publish`).
+
+Tags must use the `x.y.z` format (three numeric components, no leading `v`). This convention is used consistently for releases in this project.
+
 [log4j]: https://logging.apache.org/log4j/2.x/
 [logback]: https://logback.qos.ch/
 [effective logging level]: https://logback.qos.ch/manual/architecture.html#effectiveLevel
