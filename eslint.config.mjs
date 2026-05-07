@@ -3,7 +3,7 @@ import tsParser from '@typescript-eslint/parser'
 import eslintJs from '@eslint/js'
 import eslintTs from 'typescript-eslint'
 
-const tsFiles = ['src/**/*.ts']
+const tsFiles = ['src/**/*.ts', 'test/**/*.ts']
 
 const customTypescriptConfig = {
   files: tsFiles,
