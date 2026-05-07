@@ -10,3 +10,14 @@ export function omit(
   }
   return result
 }
+
+export function clamp(
+    val: number,
+    bounds?: { min?: number, max?: number},
+    allowFloats?: boolean ): number {
+  let clamped = val
+  if (!allowFloats) clamped = Math.floor(clamped)
+  if (bounds?.min !== undefined) clamped = Math.max(bounds?.min, clamped)
+  if (bounds?.max !== undefined) clamped = Math.min(bounds?.max, clamped)
+  return clamped
+}
